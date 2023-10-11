@@ -2,7 +2,7 @@
  * @Author: Jacket Xia
  * @Date: 2023-05-12 15:42:51
  * @LastEditors: Jacket Xia
- * @LastEditTime: 2023-05-15 11:51:50
+ * @LastEditTime: 2023-10-11 14:03:04
  * @Description: 请填写简介
  */
 import 'package:fl_bugly/fl_bugly.dart';
@@ -10,11 +10,11 @@ import 'package:flutter/material.dart';
 
 void main() {
   FlBugly.catchedException(
-    () {
-      runApp(const MyApp());
-    },
-    debugUpload: true,
+    debugUpload: false,
+    errorCallback: (exception, stack) {},
   );
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {

@@ -4,29 +4,27 @@ import 'fl_bugly_config.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class FlBugly {
-  /// 异常上报。该方法等同于 [runZonedGuarded]。
-  ///
-  /// [runApp] 运行的内容。
+  /// 捕获异常
   ///
   /// [debugUpload] 是否在调试模式也上报。默认debug不上报
-  static void catchedException(
-    void Function() runApp, {
+  ///
+  /// [errorCallback] 向外回调
+  static void catchedException({
     bool debugUpload = false,
-
-    /// 回调错误
     void Function(String exception, String stack)? errorCallback,
   }) {
     /// 上报错误
     void reportErrorAndLog(FlutterErrorDetails details) {
-      debugPrint(details.exceptionAsString());
-      debugPrint(details.stack.toString());
+      // 控制台打印
+      FlutterError.dumpErrorToConsole(details);
       if (kDebugMode && !debugUpload) {
         // debug环境且debug不上报，直接return
         return;
       }
-      if (errorCallback != null) {
-        errorCallback(details.exceptionAsString(), details.stack.toString());
-      }
+
+      errorCallback?.call(
+          details.exceptionAsString(), details.stack.toString());
+
       FlBuglyInterface.report(details);
     }
 
@@ -36,22 +34,21 @@ abstract class FlBugly {
       return FlutterErrorDetails(stack: stackTrace, exception: error);
     }
 
-    /// 捕捉页面报错
+    /// 捕捉主线程报错
+    var onError = FlutterError.onError;
     FlutterError.onError = (FlutterErrorDetails details) {
+      // 执行默认方法
+      onError?.call(details);
       // 获取 widget build 过程中出现的异常错误
       reportErrorAndLog(details);
     };
 
-    /// 捕捉全局报错
-    runZonedGuarded(
-      () {
-        runApp();
-      },
-      (error, stackTrace) {
-        // 没被我们catch的异常
-        reportErrorAndLog(makeDetails(error, stackTrace));
-      },
-    );
+    /// 捕捉异步任务报错
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FlutterErrorDetails details = makeDetails(error, stack);
+      reportErrorAndLog(details);
+      return true;
+    };
   }
 
   /// 初始化Bugly,使用默认BuglyConfigs

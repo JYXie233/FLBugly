@@ -132,7 +132,6 @@
 				30019393645F575A88630115 /* Pods-Runner.release.xcconfig */,
 				3F4099C9DA324C50F004AE8F /* Pods-Runner.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -476,6 +475,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = JYCHA46QC4;
 				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
