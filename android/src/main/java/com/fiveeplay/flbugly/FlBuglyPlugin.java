@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.tencent.bugly.Bugly;
+//import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.json.JSONObject;
@@ -76,7 +76,8 @@ public class FlBuglyPlugin implements FlutterPlugin, MethodCallHandler, Activity
       andriodAppId = call.argument("andriodAppId");
     }
 
-    Bugly.init(activity, andriodAppId, false);
+//    CrashReport.initCrashReport();
+    CrashReport.initCrashReport(activity, andriodAppId, false);
 
     if (call.hasArgument("config")) {
       config = call.argument("config");
